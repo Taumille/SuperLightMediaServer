@@ -1,8 +1,13 @@
-SuperLightMediaServer
+# SuperLightMediaServer
 
 TODO:
-- [ ] Clean filename
-- [ ] Get info from TMDB
-- [ ] Integrate in Flask
-- [ ] Create UI
-- [ ] Create media player
+- [x] Clean filename
+- [x] Get info from TMDB
+- [x] Save info to DB
+- [x] Integrate in Flask
+- [x] Create UI
+- [x] Create media player
+- [ ] Autoremove UUID links after 1d
+- [ ] Take count of already watched movies
+- [ ] Update the database when new medias are added
+- [ ] Process the series
