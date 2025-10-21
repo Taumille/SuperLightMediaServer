@@ -27,6 +27,10 @@ class MovieDB:
         self.movie_tmbd = tmdbv3api.Movie()
 
     def create_new_entry(self, movie: Movie):
+        self.cur.execute("SELECT 1 FROM movies WHERE description = ?", (movie.desc,))
+        res = self.cur.fetchone()
+        if res:
+            return res[0]
         self.cur.execute(
             "INSERT OR IGNORE INTO movies (name, description, year, path, tmdbid) VALUES (?,?,?,?,?)",
             (movie.name, movie.desc, movie.date, movie.path, movie.tmdbid))
