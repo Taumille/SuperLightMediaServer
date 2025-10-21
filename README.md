@@ -7,7 +7,7 @@ TODO:
 - [x] Integrate in Flask
 - [x] Create UI
 - [x] Create media player
-- [ ] Autoremove UUID links after 1d
+- [x] Autoremove UUID links after 1d
 - [ ] Take count of already watched movies
-- [ ] Update the database when new medias are added
+- [x] Update the database when new medias are added
 - [ ] Process the series
