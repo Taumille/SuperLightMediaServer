@@ -24,9 +24,10 @@ def media_file(id):
     conn.close()
     print(result)
 
-    link_path = "tmp/" + str(uuid.uuid4())
+    file_id = str(uuid.uuid4())
+    link_path = "/var/www/html/tmp/" + file_id
     os.symlink(result[0], link_path)
-    return redirect("vlc://http://localhost:8000/"+link_path)
+    return redirect("vlc://https://tbonnefille.fr/tmp/"+file_id)
 
 @app.route("/")
 def index():
