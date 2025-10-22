@@ -79,6 +79,11 @@ class MovieDB:
         self.download_picture(good_res.poster_path, id)
 
     def download_picture(self, filename: str, id):
+        if filename is None:
+            shutil.copy("static/pictures/none.jpg",
+                        "static/pictures/"+str(id)+".jpg")
+            return
+
         url = "https://image.tmdb.org/t/p/w1280"+ filename
         filename = wget.download(url)
 
