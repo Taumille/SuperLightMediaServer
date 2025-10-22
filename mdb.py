@@ -1,6 +1,6 @@
 import sqlite3
 import tmdbv3api
-from secret import SECRET_API_KEY
+import env
 import os
 import shutil
 from cleaner import Cleaner
@@ -22,8 +22,8 @@ class MovieDB:
             "CREATE TABLE IF NOT EXISTS movies(id INTEGER PRIMARY KEY AUTOINCREMENT, name, description, year, path, tmdbid)")
         self.con.commit()
         self.tmdb = tmdbv3api.TMDb()
-        self.tmdb.api_key = SECRET_API_KEY
-        self.tmdb.language = "fr"
+        self.tmdb.api_key = env.SECRET_API_KEY
+        self.tmdb.language = env.TMDB_LANGUAGE
         self.movie_tmbd = tmdbv3api.Movie()
 
     def create_new_entry(self, movie: Movie):
