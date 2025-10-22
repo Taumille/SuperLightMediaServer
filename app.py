@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for
 import sqlite3
 import os
 import uuid
+import env
 
 app = Flask(__name__)
 
@@ -25,9 +26,9 @@ def media_file(id):
     print(result)
 
     file_id = str(uuid.uuid4())
-    link_path = "/var/www/html/tmp/" + file_id
+    link_path = env.WEB_SERVER_PATH + file_id
     os.symlink(result[0], link_path)
-    return redirect("vlc://https://tbonnefille.fr/tmp/"+file_id)
+    return redirect(env.WEB_SERVER_LINK+file_id)
 
 @app.route("/")
 def index():

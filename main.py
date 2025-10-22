@@ -1,4 +1,5 @@
 import os
+import env
 import time
 from cleaner import Cleaner
 from mdb import MovieDB
@@ -17,7 +18,7 @@ def browse_subdir(path: str, extensions: tuple = ('.mkv', '.avi', '.mp4', '.mov'
 def worker_removelink():
     # For each link, get its creation date and remove link from more than a
     # day
-    file_list = browse_subdir("/home/thomas/Documents/SuperLightMediaServer/tmp",
+    file_list = browse_subdir(env.WEB_SERVER_PATH,
                               ("all"))
     for file in file_list:
         if (abs(os.lstat(file).st_ctime - time.time())) > 86400:
@@ -26,7 +27,7 @@ def worker_removelink():
 
 
 def worker_addentries(c, db):
-    file_list = browse_subdir("/data/Movies/Movies")
+    file_list = browse_subdir(env.MOVIE_PATH)
     con = sqlite3.connect("movies.db")
     cur = con.cursor()
     for file in file_list:
@@ -47,15 +48,6 @@ def scheduler(c, db):
 
 
 if __name__ == "__main__":
-    """
-    c = Cleaner()
-    db = MovieDB()
-    movie_list = browse_subdir("/data/Movies/Movies")
-    for movie in movie_list:
-        print("\n")
-        print(c.full_clean(movie))
-        db.tmdb_search(c)
-    """
     c = Cleaner()
     db = MovieDB()
     scheduler(c, db)
