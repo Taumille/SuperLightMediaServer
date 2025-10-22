@@ -26,7 +26,7 @@ def worker_removelink():
             os.remove(file)
 
 
-def worker_addentries(c, db):
+def worker_addentries_movie(c, db):
     file_list = browse_subdir(env.MOVIE_PATH)
     con = sqlite3.connect("movies.db")
     cur = con.cursor()
@@ -35,14 +35,14 @@ def worker_addentries(c, db):
         result = cur.fetchone()
         if result is None:
             print(c.full_clean(file))
-            db.tmdb_search(c)
+            db.tmdb_search_movie(c)
 
 
 
 def scheduler(c, db):
     while True:
         worker_removelink()
-        worker_addentries(c, db)
+        worker_addentries_movie(c, db)
         print("done")
         time.sleep(10)
 

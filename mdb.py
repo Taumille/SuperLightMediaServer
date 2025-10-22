@@ -37,7 +37,7 @@ class MovieDB:
         self.con.commit()
         return self.cur.lastrowid
 
-    def tmdb_search(self, cleaner: Cleaner):
+    def tmdb_search_movie(self, cleaner: Cleaner):
         search = self.movie_tmbd.search(cleaner.filename)
         movie = Movie()
         movie.date = cleaner.date
