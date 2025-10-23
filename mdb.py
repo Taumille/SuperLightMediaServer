@@ -13,7 +13,7 @@ class Movie:
         self.date = 1900
         self.desc = ""
         self.tmdbid = 0
-        self.episode = "S00E00"
+        self.episode = "S99E99"
 
 
 def extract_base_name(path, basepath_variable):

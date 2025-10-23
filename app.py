@@ -32,7 +32,6 @@ def series_detail(series_name):
     # Fetch the series description and episodes
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
-    print(f"Plip pploup {series_name}")
 
     # Get series description (assuming you have a 'description' column)
     cursor.execute("SELECT description FROM series WHERE series_name = ? LIMIT 1", (series_name,))
@@ -40,12 +39,13 @@ def series_detail(series_name):
 
     # Get all episodes for the series
     cursor.execute("""
-        SELECT id, series_name, path
+        SELECT id, series_name, path, episode
         FROM series
         WHERE series_name = ?
-        ORDER BY path ASC
+        ORDER BY episode ASC
     """, (series_name,))
     episodes = cursor.fetchall()
+    print(episodes)
 
     conn.close()
 

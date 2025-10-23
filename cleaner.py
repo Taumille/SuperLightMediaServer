@@ -6,7 +6,7 @@ class Cleaner:
         self.name_history = []
         self.mediatype = None
         self.date = 1900
-        self.episode = "S00E00"
+        self.episode = "S99E99"
         self.path = path
         try:
             self.filename = os.path.basename(path)
@@ -39,15 +39,16 @@ class Cleaner:
     def clean_from_episodes(self, orig: str):
         name = orig
         # Find date between 1900 and 2039
-        match = re.search(r'\bS\d{1,2}E\d{1,2}\b', name)
+        match = re.search(r'\bS\d{1,2}E\d{1,2}\b', name, re.IGNORECASE)
 
         if match:
             # Extract everything before the seasons/episode
             title_part = name[:match.start()]
-            self.episode = match.group(0)
+            self.episode = match.group(0).upper()
         else:
             # If no year is found, take the whole name
             title_part = name
+            self.episode = "S99E99"
 
         self.filename = title_part
         return title_part
