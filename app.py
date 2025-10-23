@@ -1,13 +1,18 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, session, request, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 import uuid
 import env
 
 app = Flask(__name__)
+app.secret_key = env.SECRET_FLASK_KEY
+password_hashed = env.PASSWORD
 
 def get_movies():
     """Fetch all movies from the database."""
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id, name FROM movies ORDER BY name ASC")
@@ -18,6 +23,8 @@ def get_movies():
 
 def get_series():
     """Fetch all movies from the database."""
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT series_name FROM series ORDER BY series_name ASC")
@@ -29,6 +36,8 @@ def get_series():
 
 @app.route('/series/<series_name>')
 def series_detail(series_name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     # Fetch the series description and episodes
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
@@ -54,6 +63,8 @@ def series_detail(series_name):
 
 @app.route('/media/<path:id>')
 def media_file(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
 
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
@@ -71,6 +82,8 @@ def media_file(id):
 
 @app.route('/series_media/<path:id>')
 def series_file(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
 
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
@@ -86,21 +99,39 @@ def series_file(id):
     return redirect(env.WEB_SERVER_LINK+file_id)
 
 
-@app.route("/")
+@app.route("/service")
 def index():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template("index.html")
 
 
 @app.route("/movies")
 def movies():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     movies = get_movies()
     return render_template("movies.html", movies=movies)
 
 
 @app.route("/series")
 def series():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     movies = get_series()
     return render_template("series.html", movies=movies)
+
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if check_password_hash(password_hashed, password):
+            session['logged_in'] = True
+            return redirect(url_for('index'))
+        else:
+            flash('Incorrect password. Please try again.', 'error')
+    return render_template('login.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
