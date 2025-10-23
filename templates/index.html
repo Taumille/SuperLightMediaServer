@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Gallery</title>
+    <title>Media Library</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 <body>
-    <div class="gallery">
-        {% for id, title in movies %}
-        <a href="{{ url_for('media_file', id=id|string) }}" class="play-button">
-        <div class="movie-card">
-            <img src="{{ url_for('static', filename='pictures/' + id|string + '.jpg') }}" alt="{{ title }} Poster" class="movie-poster">
-            <div class="movie-title">{{ title }}</div>
+    <div class="container">
+        <h1>Media Library</h1>
+        <p>Choose what you want to browse:</p>
+        <div class="options">
+            <a href="/movies" class="option">Movies</a>
+            <a href="/series" class="option">Series</a>
         </div>
-        </a>
-        {% endfor %}
     </div>
 </body>
 </html>

@@ -34,14 +34,26 @@ def worker_addentries_movie(c, db):
         cur.execute("SELECT 1 FROM movies WHERE path = ?", (file,))
         result = cur.fetchone()
         if result is None:
-            print(c.full_clean(file))
+            print(c.full_clean_movie(file))
             db.tmdb_search_movie(c)
 
+
+def worker_addentries_series(c, db):
+    file_list = browse_subdir(env.SERIES_PATH)
+    con = sqlite3.connect("movies.db")
+    cur = con.cursor()
+    for file in file_list:
+        cur.execute("SELECT 1 FROM series WHERE path = ?", (file,))
+        result = cur.fetchone()
+        if result is None:
+            print(c.full_clean_series(file))
+            db.tmdb_search_series(c)
 
 
 def scheduler(c, db):
     while True:
         worker_removelink()
+        worker_addentries_series(c, db)
         worker_addentries_movie(c, db)
         print("done")
         time.sleep(10)
