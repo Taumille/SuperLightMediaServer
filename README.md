@@ -10,4 +10,5 @@ TODO:
 - [x] Autoremove UUID links after 1d
 - [ ] Take count of already watched movies
 - [x] Update the database when new medias are added
-- [ ] Process the series
+- [x] Process the series
+- [ ] Make it work on Windows
