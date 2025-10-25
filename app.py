@@ -96,9 +96,13 @@ def series_file(id):
     conn.close()
     print(result)
 
-    file_id = str(uuid.uuid4())
+    file_id = os.path.basename(result[0])
     link_path = env.WEB_SERVER_PATH + file_id
-    os.symlink(result[0], link_path)
+    try:
+        os.symlink(result[0], link_path)
+    except FileExistsError:
+        os.utime(link_path, (time.time(), time.time()),
+                 follow_symlinks=False)
 
     return redirect(env.WEB_SERVER_LINK+file_id)
 
