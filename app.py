@@ -2,8 +2,8 @@ from flask import Flask, render_template, redirect, url_for, session, request, f
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
-import uuid
 import env
+import time
 
 app = Flask(__name__)
 app.secret_key = env.SECRET_FLASK_KEY
@@ -73,9 +73,13 @@ def media_file(id):
     conn.close()
     print(result)
 
-    file_id = str(uuid.uuid4())
+    file_id = os.path.basename(result[0])
     link_path = env.WEB_SERVER_PATH + file_id
-    os.symlink(result[0], link_path)
+    try:
+        os.symlink(result[0], link_path)
+    except FileExistsError:
+        os.utime(link_path, (time.time(), time.time()),
+                 follow_symlinks=False)
 
     return redirect(env.WEB_SERVER_LINK+file_id)
 
