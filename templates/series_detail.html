@@ -8,12 +8,19 @@
 </head>
 <body>
     <div class="series-detail">
-        <h1>{{ series_name }}</h1>
-        {% if description %}
-        <div class="series-description">
-            <p>{{ description[0] }}</p>
+        <div class="series-header">
+            <div class="series-image">
+                <img src="{{ url_for('static', filename='pictures/' + series_name|string + '.jpg') }}" alt="{{ series_name }} Poster">
+            </div>
+            <div class="series-info">
+                <h1>{{ series_name }}</h1>
+                {% if description %}
+                <div class="series-description">
+                    <p>{{ description[0] }}</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
         <h2>Episodes</h2>
         <div class="episodes-list">
             {% for episode in episodes %}
