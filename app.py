@@ -83,8 +83,8 @@ def media_file(id):
                  follow_symlinks=False)
 
     user_agent_string = request.headers.get('User-Agent', '')
-    is_windows = 'Windows' in user_agent_string
-    if is_windows:
+    is_linux = 'Linux' in user_agent_string
+    if not is_linux:
         # Create an m3u
         with open(env.WEB_SERVER_PATH + file_id + ".m3u", "w") as f:
             f.write(env.WEB_SERVER_LINK+file_id)
@@ -114,8 +114,8 @@ def series_file(id):
                  follow_symlinks=False)
 
     user_agent_string = request.headers.get('User-Agent', '')
-    is_windows = 'Windows' in user_agent_string
-    if is_windows:
+    is_linux = 'Linux' in user_agent_string
+    if not is_linux:
         # Create an m3u
         with open(env.WEB_SERVER_PATH + file_id + ".m3u", "w") as f:
             f.write(env.WEB_SERVER_LINK+file_id)
