@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, session, request, flash
+from flask import Flask, render_template, redirect, url_for, session, request, flash, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
+from user_agents import parse
 import sqlite3
 import os
 import env
@@ -81,7 +82,15 @@ def media_file(id):
         os.utime(link_path, (time.time(), time.time()),
                  follow_symlinks=False)
 
-    return redirect(env.WEB_SERVER_LINK+file_id)
+    user_agent_string = request.headers.get('User-Agent', '')
+    is_windows = 'Windows' in user_agent_string
+    if is_windows:
+        # Create an m3u
+        with open(env.WEB_SERVER_PATH + file_id + ".m3u", "w") as f:
+            f.write(env.WEB_SERVER_LINK+file_id)
+        return send_file(env.WEB_SERVER_PATH+file_id+".m3u")
+    return redirect("vlc://" + env.WEB_SERVER_LINK+file_id)
+
 
 
 @app.route('/series_media/<path:id>')
@@ -104,7 +113,14 @@ def series_file(id):
         os.utime(link_path, (time.time(), time.time()),
                  follow_symlinks=False)
 
-    return redirect(env.WEB_SERVER_LINK+file_id)
+    user_agent_string = request.headers.get('User-Agent', '')
+    is_windows = 'Windows' in user_agent_string
+    if is_windows:
+        # Create an m3u
+        with open(env.WEB_SERVER_PATH + file_id + ".m3u", "w") as f:
+            f.write(env.WEB_SERVER_LINK+file_id)
+        return send_file(env.WEB_SERVER_PATH+file_id+".m3u")
+    return redirect("vlc://" + env.WEB_SERVER_LINK+file_id)
 
 
 @app.route("/service")
