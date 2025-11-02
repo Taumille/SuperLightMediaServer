@@ -22,6 +22,12 @@
             </div>
         </div>
         <h2>Episodes</h2>
+        <a href="{{ url_for('series_all', series_name=series_name) }}" class="episode-link">
+        <div class="play">
+            <img src="{{ url_for('static', filename='assets/play.png') }}"
+            alt="{{ play_button }} Poster">
+        </div>
+        </a>
         <div class="episodes-list">
             {% for episode in episodes %}
             <div class="episode-card">

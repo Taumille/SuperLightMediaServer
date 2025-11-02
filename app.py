@@ -91,6 +91,37 @@ def media_file(id):
         return send_file(env.WEB_SERVER_PATH+file_id+".m3u")
     return redirect("vlc://" + env.WEB_SERVER_LINK+file_id)
 
+@app.route('/series_all/<series_name>')
+def series_all(series_name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    conn = sqlite3.connect("movies.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT path FROM series WHERE series_name = ? ORDER BY episode ASC", (series_name,))
+    results = cursor.fetchall()
+    conn.close()
+    m3u_content = ""
+    for result in results:
+        file_id = os.path.basename(result[0])
+        link_path = env.WEB_SERVER_PATH + file_id
+        try:
+            os.symlink(result[0], link_path)
+        except FileExistsError:
+            os.utime(link_path, (time.time(), time.time()),
+                     follow_symlinks=False)
+        m3u_content += "\n" + env.WEB_SERVER_LINK + file_id
+
+    with open(env.WEB_SERVER_PATH + series_name + ".m3u", "w") as f:
+        f.write(m3u_content)
+
+    user_agent_string = request.headers.get('User-Agent', '')
+    is_linux = 'Linux' in user_agent_string
+    if not is_linux:
+        # Create an m3u
+        return send_file(env.WEB_SERVER_PATH+series_name+".m3u")
+    return redirect("vlc://" + env.WEB_SERVER_LINK+series_name+".m3u")
+
 
 
 @app.route('/series_media/<path:id>')
