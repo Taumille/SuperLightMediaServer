@@ -7,15 +7,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 <body>
+    <div class="slider-container">
+        <label class="switch">
+            <input type="checkbox" id="download-toggle">
+            <span class="slider round"></span>
+        </label>
+        <span id="slider-label">Stream</span>
+    </div>
     <div class="gallery">
         {% for id, title in movies %}
-        <a href="{{ url_for('media_file', id=id|string) }}" class="play-button">
-        <div class="movie-card">
-            <img src="{{ url_for('static', filename='pictures/' + id|string + '.jpg') }}" alt="{{ title }} Poster" class="movie-poster">
-            <div class="movie-title">{{ title }}</div>
-        </div>
+        <a href="{{ url_for('media_play', id=id|string, action='stream') }}" class="play-button" data-id="{{ id|string }}">
+            <div class="movie-card">
+                <img src="{{ url_for('static', filename='pictures/' + id|string + '.jpg') }}" alt="{{ title }} Poster" class="movie-poster">
+                <div class="movie-title">{{ title }}</div>
+            </div>
         </a>
         {% endfor %}
     </div>
+    <script src="{{ url_for('static', filename='scripts/streamdl.js') }}"></script>
 </body>
 </html>

@@ -62,11 +62,11 @@ def series_detail(series_name):
     return render_template('series_detail.html', series_name=series_name, description=description, episodes=episodes)
 
 
-@app.route('/media/<path:id>')
-def media_file(id):
+@app.route('/movies_play/<path:id>')
+def media_play(id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-
+    stream = request.args.get('stream', default='true').lower() == 'true'
     conn = sqlite3.connect("movies.db")
     cursor = conn.cursor()
     cursor.execute("SELECT path FROM movies WHERE id = ?", (id,))
@@ -82,6 +82,9 @@ def media_file(id):
         os.utime(link_path, (time.time(), time.time()),
                  follow_symlinks=False)
 
+    print(stream)
+    if not stream:
+        return send_file(env.WEB_SERVER_PATH+file_id)
     user_agent_string = request.headers.get('User-Agent', '')
     is_linux = 'Linux' in user_agent_string
     if not is_linux:
@@ -90,6 +93,7 @@ def media_file(id):
             f.write(env.WEB_SERVER_LINK+file_id)
         return send_file(env.WEB_SERVER_PATH+file_id+".m3u")
     return redirect("vlc://" + env.WEB_SERVER_LINK+file_id)
+
 
 @app.route('/series_all/<series_name>')
 def series_all(series_name):
